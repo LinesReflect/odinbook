@@ -13,7 +13,11 @@ class User < ApplicationRecord
   has_many :followings, through: :sent_follows, source: :followed
   has_many :followers, through: :recieved_follows, source: :follower
 
-  def follow(user)
-    self.sent_follows.build(followed: user)
+  def follow(other_user)
+    self.sent_follows.build(followed: other_user)
+  end
+
+  def unfollow(other_user)
+    Follow.find_by(followed: other_user, follower: self).destroy
   end
 end
