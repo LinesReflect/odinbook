@@ -10,17 +10,17 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_06_30_184803) do
+ActiveRecord::Schema[8.0].define(version: 2025_06_30_214827) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
-  create_table "followships", force: :cascade do |t|
+  create_table "follows", force: :cascade do |t|
     t.bigint "followed_id", null: false
     t.bigint "follower_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["followed_id"], name: "index_followships_on_followed_id"
-    t.index ["follower_id"], name: "index_followships_on_follower_id"
+    t.index ["followed_id"], name: "index_follows_on_followed_id"
+    t.index ["follower_id"], name: "index_follows_on_follower_id"
   end
 
   create_table "friend_requests", force: :cascade do |t|
@@ -51,8 +51,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_30_184803) do
     t.index ["username"], name: "index_users_on_username", unique: true
   end
 
-  add_foreign_key "followships", "users", column: "followed_id"
-  add_foreign_key "followships", "users", column: "follower_id"
+  add_foreign_key "follows", "users", column: "followed_id"
+  add_foreign_key "follows", "users", column: "follower_id"
   add_foreign_key "friendships", "users", column: "user_a_id"
   add_foreign_key "friendships", "users", column: "user_b_id"
 end
