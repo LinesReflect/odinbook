@@ -6,4 +6,14 @@ class User < ApplicationRecord
 
   validates :email, uniqueness: true
   validates :username, uniqueness: true
+
+  has_many :sent_follows, class_name: "Follow", foreign_key: :follower_id
+  has_many :recieved_follows, class_name: "Follow", foreign_key: :followed_id
+
+  has_many :followings, through: :sent_follows, source: :followed
+  has_many :followers, through: :recieved_follows, source: :follower
+
+  def follow(user)
+    self.sent_follows.build(followed: user)
+  end
 end
