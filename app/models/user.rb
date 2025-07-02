@@ -5,7 +5,7 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :validatable
 
   validates :email, uniqueness: true
-  validates :username, uniqueness: true
+  validates :username, presence: true, uniqueness: true
 
   has_many :sent_follow_requests, class_name: "FollowRequest", foreign_key: :requester_id
   has_many :received_follow_requests, class_name: "FollowRequest", foreign_key: :requested_id
@@ -18,6 +18,8 @@ class User < ApplicationRecord
 
   has_many :followings, through: :sent_follows, source: :followed
   has_many :followers, through: :received_follows, source: :follower
+
+  has_many :posts, foreign_key: :poster_id
 
   def follow(other_user)
     return if self == other_user
