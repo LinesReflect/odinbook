@@ -10,6 +10,9 @@ class User < ApplicationRecord
   has_many :sent_follows, class_name: "Follow", foreign_key: :follower_id
   has_many :recieved_follows, class_name: "Follow", foreign_key: :followed_id
 
+  has_many :sent_follow_requests, through: :sent_follows, source: :followed
+  has_many :recieved_follow_requests, through: :recieved_follows, source: :follower
+
   has_many :followings, through: :sent_follows, source: :followed
   has_many :followers, through: :recieved_follows, source: :follower
 
@@ -19,5 +22,9 @@ class User < ApplicationRecord
 
   def unfollow(other_user)
     Follow.find_by(followed: other_user, follower: self).destroy
+  end
+
+  def accept_follow_request(other_user)
+    other_user.follow(self)
   end
 end
