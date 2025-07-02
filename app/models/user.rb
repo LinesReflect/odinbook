@@ -21,6 +21,10 @@ class User < ApplicationRecord
 
   has_many :posts, foreign_key: :poster_id
 
+  has_many :likes
+
+  has_many :liked_posts, through: :likes, source: :post
+
   def follow(other_user)
     return if self == other_user
     return if self.sent_follows.exists?(followed: other_user)
@@ -66,5 +70,10 @@ class User < ApplicationRecord
 
   def safely_destroy(obj)
     obj.destroy if obj
+  end
+
+  def unlike(post)
+    like = Like.find_by(post: post)
+    like.destroy if like
   end
 end
