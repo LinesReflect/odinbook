@@ -23,7 +23,9 @@ class User < ApplicationRecord
 
   has_many :likes
 
-  has_many :liked_posts, through: :likes, source: :post
+  has_many :comments
+
+  has_many :commented_on_posts, through: :comments, source: :post
 
   def follow(other_user)
     return if self == other_user
@@ -72,8 +74,20 @@ class User < ApplicationRecord
     obj.destroy if obj
   end
 
-  def unlike(post)
-    like = Like.find_by(post: post)
+  def like(obj)
+    self.likes.create(likeable_id: obj.id, likeable_type: obj.class.name)
+  end
+
+  def liked_posts
+    self.likes.where(likeable_type: "Post")
+  end
+
+  def liked_comments
+    self.likes.where(likeable_type: "Comment")
+  end
+
+  def unlike(obj)
+    like = Like.find_by(user: self, likeable_id: obj.id, likeable_type: obj.class.name)
     like.destroy if like
   end
 end

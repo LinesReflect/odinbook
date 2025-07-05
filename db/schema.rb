@@ -10,9 +10,21 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_07_02_200713) do
+ActiveRecord::Schema[8.0].define(version: 2025_07_05_153113) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
+
+  create_table "comments", force: :cascade do |t|
+    t.text "body"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "post_id"
+    t.bigint "user_id"
+    t.bigint "parent_id"
+    t.index ["parent_id"], name: "index_comments_on_parent_id"
+    t.index ["post_id"], name: "index_comments_on_post_id"
+    t.index ["user_id"], name: "index_comments_on_user_id"
+  end
 
   create_table "follow_requests", force: :cascade do |t|
     t.bigint "requested_id", null: false
@@ -49,10 +61,11 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_02_200713) do
   create_table "likes", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.bigint "post_id"
     t.bigint "user_id"
-    t.index ["post_id"], name: "index_likes_on_post_id"
-    t.index ["user_id", "post_id"], name: "index_likes_on_user_id_and_post_id", unique: true
+    t.string "likeable_type"
+    t.bigint "likeable_id"
+    t.index ["likeable_type", "likeable_id"], name: "index_likes_on_likeable"
+    t.index ["user_id", "likeable_id", "likeable_type"], name: "index_likes_on_user_id_and_likeable_id_and_likeable_type", unique: true
     t.index ["user_id"], name: "index_likes_on_user_id"
   end
 
@@ -78,6 +91,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_02_200713) do
     t.index ["username"], name: "index_users_on_username", unique: true
   end
 
+  add_foreign_key "comments", "comments", column: "parent_id"
   add_foreign_key "follow_requests", "users", column: "requested_id"
   add_foreign_key "follow_requests", "users", column: "requester_id"
   add_foreign_key "follows", "users", column: "followed_id"
