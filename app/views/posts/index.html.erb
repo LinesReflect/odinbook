@@ -1,0 +1,28 @@
+<% if current_user.followings_posts.any? %>
+    <div>
+        <% current_user.feed.sort_by(&:created_at).reverse.each do |post| %>
+            <div>
+                <p><%= post.body %></p>
+                <p><%= post.poster.username %></p>
+                <p>Likes: <%= post.likes.count %></p>
+                <p><%= post.created_at.strftime("%B %d, %Y %I:%M:%S%p") %></p>
+            </div>
+            <p>Comments:</p>
+            <% if post.comments.any? %>
+                <div>
+                    <ul>
+                        <% post.comments.top_level.each do |comment| %>
+                            <li>
+                                <%= render partial: "/posts/shared/comment", locals: { current_comment: comment } %>
+                            </li>
+                        <% end %>
+                    </ul>
+                </div>
+            <% end %>
+        <% end %>
+    </div>
+<% else %>
+    <div>
+        <p>No posts have been made by users you follow...</p>
+    </div>
+<% end %>

@@ -1,0 +1,13 @@
+<p><%= current_comment.user.username %></p>
+<p><%= current_comment.body %></p>
+<p><%= current_comment.likes.count %></p>
+<p><%= current_comment.created_at.strftime("%B %d, %Y %I:%M:%S%p") %></p>
+<% if current_comment.replies.any? %>
+    <ul>
+        <% current_comment.replies.each do |reply| %>
+            <li>
+                <%= render partial: "/posts/shared/comment", locals: { current_comment: reply } %>
+            </li>
+        <% end %>
+    </ul>
+<% end %>

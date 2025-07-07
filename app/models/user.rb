@@ -34,6 +34,10 @@ class User < ApplicationRecord
     self.sent_follows.create(followed: other_user)
   end
 
+  def follows?(other_user)
+    self.followers.include?(other_user)
+  end
+
   def unfollow(other_user)
     return if self == other_user
 
@@ -89,5 +93,15 @@ class User < ApplicationRecord
   def unlike(obj)
     like = Like.find_by(user: self, likeable_id: obj.id, likeable_type: obj.class.name)
     like.destroy if like
+  end
+
+  def followings_posts
+    self.followings.map do |following|
+      following.posts
+    end
+  end
+
+  def feed
+    self.posts + self.followings_posts.flatten
   end
 end
