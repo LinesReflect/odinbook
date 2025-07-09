@@ -1,4 +1,4 @@
-<p><%= current_comment.user.username %></p>
+<p><%= link_to current_comment.user.username, user_path(current_comment.user) %></p>
 <p><%= current_comment.body %></p>
 <p><%= current_comment.likes.count %></p>
 <p><%= current_comment.created_at.strftime("%B %d, %Y %I:%M:%S%p") %></p>

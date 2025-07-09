@@ -1,0 +1,22 @@
+<% posts.sort_by(&:created_at).reverse.each do |post| %>
+    <div>
+        <p><%= post.body %></p>
+        <p>by: <%= link_to post.poster.username, user_path(post.poster) %></p>
+        <p>Likes: <%= post.likes.count %></p>
+        <p><%= post.created_at.strftime("%B %d, %Y %I:%M:%S%p") %></p>
+    </div>
+    <p>Comments:</p>
+    <% if post.comments.any? %>
+        <div>
+            <ul>
+                <% post.comments.top_level.each do |comment| %>
+                    <li>
+                        <%= render partial: "/posts/shared/comment", locals: { current_comment: comment } %>
+                    </li>
+                <% end %>
+            </ul>
+        </div>
+    <% else %>
+        <p>No comments made...</p>
+    <% end %>
+<% end %>

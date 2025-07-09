@@ -1,0 +1,10 @@
+<h1><%= @user.username %>'s Profile</h1>
+
+<p>Following: <%= @user.followings.count %> | Followers: <%= @user.followers.count %></p>
+
+<h2>Posts</h2>
+<% if @user.posts.any? %>
+    <div>
+        <%= render partial: "/posts/shared/posts", locals: { posts: current_user.posts } %>
+    </div>
+<% end %>
