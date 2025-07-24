@@ -2,7 +2,8 @@ class User < ApplicationRecord
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :validatable
+         :recoverable, :rememberable, :validatable,
+         :omniauthable, omniauth_providers: [ :google_oauth2, :twitter2 ]
 
   validates :email, uniqueness: true
   validates :username, presence: true, uniqueness: true
@@ -26,6 +27,32 @@ class User < ApplicationRecord
   has_many :comments
 
   has_many :commented_on_posts, through: :comments, source: :post
+
+  def self.from_omniauth(auth)
+    email = auth.info.email
+    username = auth.info.nickname || auth.info.name || "user_#{auth.uid}"
+    provider = auth.provider
+    uid = auth.uid
+
+    user = User.find_by(provider: provider, uid: uid)
+    return user if user.present?
+
+    if email.present?
+      existing_user = User.find_by(email: email)
+      if existing_user
+        existing_user.update(provider: provider, uid: uid) if existing_user.provider.nil?
+        return existing_user
+      end
+    end
+
+    user = User.create(
+      provider: provider,
+      uid: uid,
+      email: email || "#{uid}@change-me.com",
+      username: username,
+      password: Devise.friendly_token[0, 20]
+    )
+  end
 
   def follow(other_user)
     return if self == other_user
