@@ -1,9 +1,13 @@
-<% if current_user.followings_posts.any? %>
-    <div>
-        <%= render partial: "posts/shared/posts", locals: { posts: current_user.feed } %>
-    </div>
-<% else %>
-    <div>
-        <p>No posts have been made by users you follow...</p>
-    </div>
-<% end %>
+<div class="index-main-wrapper" style="display: flex; flex-direction: column;">
+    <h1 class="index-title" style="display: flex; justify-content: center;">Your Feed</h1>
+    
+    <% if current_user.feed.present? %>
+        <div>
+            <%= render partial: "posts/shared/posts", locals: { posts: current_user.feed } %>
+        </div>
+    <% else %>
+        <div>
+            <p>No posts have been made by users you follow...</p>
+        </div>
+    <% end %>
+</div>

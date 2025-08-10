@@ -1,12 +1,17 @@
 class User < ApplicationRecord
+  include Gravatar
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable,
          :omniauthable, omniauth_providers: [ :google_oauth2, :twitter2 ]
 
+  after_create :set_avatar
+
   validates :email, uniqueness: true
   validates :username, presence: true, uniqueness: true
+
+  has_one_attached :avatar
 
   has_many :sent_follow_requests, class_name: "FollowRequest", foreign_key: :requester_id
   has_many :received_follow_requests, class_name: "FollowRequest", foreign_key: :requested_id
@@ -30,9 +35,10 @@ class User < ApplicationRecord
 
   def self.from_omniauth(auth)
     email = auth.info.email
-    username = auth.info.nickname || auth.info.name || "user_#{auth.uid}"
+    username = auth.info.username || auth.info.nickname || auth.info.name || "user_#{auth.uid}"
     provider = auth.provider
     uid = auth.uid
+    auth_image = auth.info.image.nil? ? auth.extra.raw_info.data.profile_image_url : auth.info.image
 
     user = User.find_by(provider: provider, uid: uid)
     return user if user.present?
@@ -48,10 +54,31 @@ class User < ApplicationRecord
     user = User.create(
       provider: provider,
       uid: uid,
-      email: email || "#{uid}@change-me.com",
+      email: email.nil? ? "#{uid}@#{provider}.com" : email,
       username: username,
-      password: Devise.friendly_token[0, 20]
+      password: Devise.friendly_token[0, 20],
+      profile_picture_url: auth_image
     )
+  end
+
+  def set_avatar
+    if self.provider.present? && self.profile_picture_url.present?
+      downloaded_image = Down.download(self.profile_picture_url)
+      avatar.attach(io: downloaded_image, filename: "avatar.jpg")
+    elsif has_gravatar?
+      downloaded_image = Down.download(image_src(default_image_params))
+      avatar.attach(io: downloaded_image, filename: "avatar.jpg")
+    else
+      avatar.attach(io: File.open("app/assets/images/blank-profile-picture-973460_1920.png"), filename: "blank-profile-picture-973460_1920.png", content_type: "avatar/png")
+    end
+  end
+
+  def avatar_thumbnail_size
+    "25x25"
+  end
+
+  def avatar_profile_size
+    "100x100"
   end
 
   def follow(other_user)
@@ -129,6 +156,6 @@ class User < ApplicationRecord
   end
 
   def feed
-    self.posts + self.followings_posts.flatten
+    (self.posts + self.followings_posts).flatten
   end
 end

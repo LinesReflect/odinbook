@@ -1,22 +1,30 @@
 <% posts.sort_by(&:created_at).reverse.each do |post| %>
-    <div>
-        <p><%= post.body %></p>
-        <p>by: <%= link_to post.poster.username, user_path(post.poster) %></p>
-        <p>Likes: <%= post.likes.count %></p>
-        <p><%= post.created_at.strftime("%B %d, %Y %I:%M:%S%p") %></p>
-    </div>
-    <p>Comments:</p>
-    <% if post.comments.any? %>
+    <div class="post-wrapper" style="width: fit-content; border-left: 4px solid black;">
         <div>
-            <ul>
-                <% post.comments.top_level.each do |comment| %>
-                    <li>
-                        <%= render partial: "/posts/shared/comment", locals: { current_comment: comment } %>
-                    </li>
-                <% end %>
-            </ul>
+            <%= link_to user_path(post.poster) do %>
+                <%= image_tag post.poster.avatar, size: post.poster.avatar_thumbnail_size %>
+                <%= post.poster.username %>
+            <% end %>
+            <p><%= post.body %></p>
+            <div class="post-details" style="display: flex; flex-direction: row; gap: 2px;" >
+                <p>Likes: <%= post.likes.count %></p>
+                <p>|</p>
+                <p><%= post.created_at.strftime("%B %d, %Y %I:%M:%S%p") %></p>
+            </div>
         </div>
-    <% else %>
-        <p>No comments made...</p>
-    <% end %>
+        <p>Comments:</p>
+        <% if post.comments.any? %>
+            <div>
+                <ul>
+                    <% post.comments.top_level.each do |comment| %>
+                        <li class="listed-comment-wrapper" style="list-style: none;">
+                            <%= render partial: "/posts/shared/comment", locals: { current_comment: comment } %>
+                        </li>
+                    <% end %>
+                </ul>
+            </div>
+        <% else %>
+            <p>No comments made...</p>
+        <% end %>
+    </div>
 <% end %>
