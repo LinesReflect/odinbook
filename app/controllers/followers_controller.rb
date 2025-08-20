@@ -1,0 +1,13 @@
+class FollowersController < ApplicationController
+  before_action :set_user
+
+  def index
+    @followers = @user.followers
+    @follow = Follow.new
+  end
+
+  private
+  def set_user
+    @user = User.find(params[:user_id])
+  end
+end

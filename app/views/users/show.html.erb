@@ -1,4 +1,8 @@
-<h1><%= @user.username %>'s Profile</h1>
+<% if @user == current_user %>
+    <h1>Your Profile</h1>
+<% else %>
+    <h1><%= @user.username %>'s Profile</h1>
+<% end %>
 
 <% if @user.avatar.attached?%>
     <%= image_tag @user.avatar, size: @user.avatar_profile_size %>
@@ -6,11 +10,27 @@
     <%= image_tag @user.avatar, size: avatar_profile_size%>
 <% end %>
 
-<p>Following: <%= @user.followings.count %> | Followers: <%= @user.followers.count %></p>
+<div class="profile-follow-data" data-controller="follows">
+    <% if current_user == @user %>
+    <% elsif  current_user.follows?(@user) %>
+        <%= button_to "Unfollow", follow_path(Follow.find_by(followed: @user, follower: current_user).id), method: :delete, data: {turbo: true} %>
+    <% elsif !current_user.follows?(@user)%>
+        <div><%= render partial: "follows/shared/follow_form", locals: {current_user: current_user, other_user: @user}%></div>
+    <% end %>
+    <div class="follows-wrapper" style="display: flex; gap: 5px; align-items: center;">
+        <%= link_to "Following: #{@user.followings.count}", user_followings_path(@user) %>
+        <p> | </p>
+        <%= link_to "Followers: #{@user.followers.count}", user_followers_path(@user) %>
+    </div>
+</div>
 
 <h2>Posts</h2>
 <% if @user.posts.any? %>
     <div>
         <%= render partial: "/posts/shared/posts", locals: { posts: @user.posts } %>
     </div>
+<% elsif @user == current_user %>
+    <p>You have not made a post yet...</p>
+<% else %>
+    <p><%= @user.username %> has not made a post yet...</p>
 <% end %>

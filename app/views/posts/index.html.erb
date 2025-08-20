@@ -2,7 +2,7 @@
     <h1 class="index-title" style="display: flex; justify-content: center;">Your Feed</h1>
     
     <% if current_user.feed.present? %>
-        <div>
+        <div class="post-feed">
             <%= render partial: "posts/shared/posts", locals: { posts: current_user.feed } %>
         </div>
     <% else %>

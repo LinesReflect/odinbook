@@ -1,0 +1,31 @@
+<% if @user == current_user %>
+    <h2> <%= link_to "Back to your profile", user_path(@user) %> </h2>
+<% else %>
+    <h2><%= link_to "Back to #{@user.username} profile", user_path(@user) %></h2>
+<% end %>
+
+<% if @user == current_user %>
+    <h1 class="followed-index-title" style="text-align: center;">Your Followed Users</h1>
+<% else %>
+    <h1 class="followed-index-title" style="text-align: center;"><%= @user.username%> Followed Users</h1>
+<% end %>
+
+
+<div class="followed-users-wrapper" style="justify-self: center; display: grid; grid-template-columns: repeat(4, 1fr); justify-content: center; gap: 1px">
+    <% @followings.each do |following| %>
+        <div class="following-wrapper" style="background-color: lightgrey; display: flex; align-items: center; gap: 5px; padding: 5px;">
+            <%= image_tag following.avatar, size: following.avatar_profile_size %>
+            <%= link_to following.username, user_path(following) %>
+            <% if following == current_user %>
+                <p style="color: brown;">- You</p>
+            <% elsif  current_user.follows?(following) %>
+                <p style="color: green;">- Following ✓</p>
+            <% else %>
+                <p style="color: rosybrown;">- Not Following</p>
+            <% end %>
+            <% if @user == current_user %>
+                <%= button_to "Unfollow", follow_path(Follow.find_by(followed: following, follower: current_user).id), method: :delete, data: {turbo: true} %>
+            <% end %>
+        </div>
+    <% end %>
+</div>

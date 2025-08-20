@@ -22,8 +22,11 @@
     <%= javascript_importmap_tags %>
   </head>
 
-  <body>
+  <header>
     <%= render "/layouts/shared/navbar" %>
+  </header>
+
+  <body>
     <%= yield %>
   </body>
 </html>

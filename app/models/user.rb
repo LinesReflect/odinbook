@@ -6,7 +6,7 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :validatable,
          :omniauthable, omniauth_providers: [ :google_oauth2, :twitter2 ]
 
-  after_create :set_avatar
+  # after_create :set_avatar
 
   validates :email, uniqueness: true
   validates :username, presence: true, uniqueness: true
@@ -89,7 +89,7 @@ class User < ApplicationRecord
   end
 
   def follows?(other_user)
-    self.followers.include?(other_user)
+    self.followings.include?(other_user)
   end
 
   def unfollow(other_user)

@@ -1,0 +1,5 @@
+<%= form_with model: [current_user,  do |form| %>
+    <%= form.hidden_field :followed, value: user.id %>
+    <%= form.hidden_field :follower, value: current_user.id %>
+    <%= form.submit "Follow" %>
+<% end %>
