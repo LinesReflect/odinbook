@@ -25,12 +25,18 @@
 </div>
 
 <h2>Posts</h2>
-<% if @user.posts.any? %>
-    <div>
-        <%= render partial: "/posts/shared/posts", locals: { posts: @user.posts } %>
+<p id="post-count"><%= @user.posts.count %> posts</p>
+<div class="user-profile-main-wrapper" style="display: flex; flex-direction: column;">
+    <% if @user == current_user%>
+        <div class="new-post-wrapper" style="align-self: center;">
+            <%= turbo_frame_tag "new-post", src: new_post_path %>
+        </div>
+    <% end %>
+    <div id="posts">
+        <div>
+            <% @user.posts.sort_by(&:created_at).reverse.each do |post| %>
+                <%= render partial: "posts/post", locals: { post: post } %>
+            <% end %>
+        </div>
     </div>
-<% elsif @user == current_user %>
-    <p>You have not made a post yet...</p>
-<% else %>
-    <p><%= @user.username %> has not made a post yet...</p>
-<% end %>
+</div>

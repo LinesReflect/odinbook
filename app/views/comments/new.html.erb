@@ -1,0 +1,5 @@
+<% if params[:parent_id] %>
+    <%= render "new_reply_form" %>
+<% else %>
+    <%= render "new_comment_form" %>
+<% end %>

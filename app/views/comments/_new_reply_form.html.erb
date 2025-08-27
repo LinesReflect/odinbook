@@ -1,0 +1,11 @@
+<%= turbo_frame_tag "comment_#{params[:parent_id]}_new_reply" do%>
+    <%= form_with model: @comment do |form| %>
+        <div style="display: flex; align-items: center;">
+            <%= form.text_area :body %>
+            <%= form.hidden_field :post_id, value: params[:post] %>
+            <%= form.hidden_field :user_id, value: current_user.id %>
+            <%= form.hidden_field :parent_id, value: params[:parent_id] %>
+            <%= form.submit "Reply" %>
+        </div>
+    <% end %>
+<% end%>

@@ -1,0 +1,21 @@
+<div class="comment-wrapper" style="margin: 10px; border-left: 1px solid black; border-bottom: 1px solid black;">
+    <%= link_to user_path(current_comment.user) do %>
+        <%= image_tag current_comment.user.avatar, size: current_comment.user.avatar_thumbnail_size %>
+        <%= current_comment.user.username %>
+    <% end %>
+    <p><%= current_comment.body %></p>
+    <p>Likes: <%= current_comment.likes.count %></p>
+    <p><%= current_comment.created_at.strftime("%B %d, %Y %I:%M:%S%p") %></p>
+
+    <%= turbo_frame_tag "comment_#{current_comment.id}_new_reply" do %>
+        <%= link_to "Reply to #{current_comment.user.username}", new_comment_path(post: current_comment.post, parent_id: current_comment.id) %>
+    <% end %>
+
+    <ul style="gap: 5px">
+        <%= content_tag :div, id: "replies_#{current_comment.id}" do %>
+            <% current_comment.replies.each do |reply| %>
+                <li><%= render partial: "comments/comment", locals: { current_comment: reply } %></li>
+            <% end %>
+        <% end %>
+    </ul>
+</div>

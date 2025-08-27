@@ -1,0 +1,9 @@
+<%= turbo_frame_tag "new-post" do %>
+    <%= form_with model: @post do |form| %>
+        <div style="display: flex; align-items: center;">
+            <%= form.textarea :body %>
+            <%= form.hidden_field :poster_id, value: current_user.id%>
+            <%= form.submit %>
+        </div>
+    <% end %>
+<% end %>

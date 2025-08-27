@@ -1,0 +1,30 @@
+<div class="post-wrapper" style="display: flex; flex-direction: column; width: fit-content; border-left: 4px solid black; border-bottom: 4px solid black; background-color: lightgrey; padding: 5px; margin: 5px; gap: 10px;">
+    <div>
+        <%= link_to user_path(post.poster) do %>
+            <%= image_tag post.poster.avatar, size: post.poster.avatar_thumbnail_size %>
+            <%= post.poster.username %>
+        <% end %>
+        <p><%= post.body %></p>
+        <div class="post-details" style="display: flex; flex-direction: row; gap: 2px;" >
+            <p>Likes: <%= post.likes.count %></p>
+            <p>|</p>
+            <p><%= post.created_at.strftime("%B %d, %Y %I:%M:%S%p") %></p>
+        </div>
+    </div>
+    
+    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid black; gap: 5px;">
+        <p >Comments: <%= post.comments.count %></p>
+        <div>
+            <%= turbo_frame_tag "post_#{post.id}_new_comment" do %>
+                <%= link_to "Comment", new_comment_path(post: post) %>
+            <% end %>
+        </div>
+    </div>
+
+    <%= content_tag :div, id: "comments_#{post.id}" do %>
+        <% post.comments.top_level.each do |comment| %>
+            <%= render partial: "comments/comment", locals: { current_comment: comment } %>
+        <% end %>
+    <% end %>
+
+</div>

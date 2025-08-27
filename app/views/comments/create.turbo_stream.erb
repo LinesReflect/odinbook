@@ -1,0 +1,15 @@
+<%if @comment.parent_id.nil? %>
+    <%= turbo_stream.append "comments_#{@comment.post_id}", partial: "comment", locals: { current_comment: @comment } %>
+    <%= turbo_stream.update "post_#{@comment.post.id}_new_comment" do %>
+        <%= turbo_frame_tag "post_#{@comment.post.id}_new_comment" do %>
+            <%= link_to "Comment", new_comment_path(post: @comment.post) %>
+        <% end %>
+    <% end %>
+<% else %>
+    <%= turbo_stream.append "replies_#{@comment.parent_id}", partial: "comment", locals: { current_comment: @comment } %>
+    <%= turbo_stream.update "comment_#{@comment.parent_id}_new_reply" do %>
+        <%= turbo_frame_tag "comment_#{@comment.parent_id}_new_reply" do %>
+            <%= link_to "Reply to #{Comment.find(@comment.parent_id).user.username}", new_comment_path(post: @comment.post, parent_id: @comment.parent_id) %>
+        <% end %>
+    <% end %>
+<% end %>
