@@ -6,14 +6,25 @@
         <% end %>
         <p><%= post.body %></p>
         <div class="post-details" style="display: flex; flex-direction: row; gap: 2px;" >
-            <p>Likes: <%= post.likes.count %></p>
-            <p>|</p>
             <p><%= post.created_at.strftime("%B %d, %Y %I:%M:%S%p") %></p>
         </div>
     </div>
     
-    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid black; gap: 5px;">
-        <p >Comments: <%= post.comments.count %></p>
+    <div style="display: flex; align-items: center; border-bottom: 1px solid black; gap: 5px;">
+        <%= content_tag :div, id: "post-#{post.id}-like-wrapper", style: "display: flex; align-items: center; gap: 5px;" do %>
+            <% if user_post_likes[post.id] %>
+                <div>
+                    <%= render partial: "likes/unlike_button", locals: {like: user_post_likes[post.id]} %>
+                </div>
+            <% else %>
+                <div>
+                    <%= render partial: "likes/like_button", locals: {likeable: post} %>
+                </div>
+            <% end %>
+            <%= link_to "#{post.likes.count} likes", post_likes_path(post) %>
+        <% end %>
+        <p>|</p>
+        <p><%= post.comments.count %> replies</p>
         <div>
             <%= turbo_frame_tag "post_#{post.id}_new_comment" do %>
                 <%= link_to "Comment", new_comment_path(post: post) %>
@@ -23,7 +34,7 @@
 
     <%= content_tag :div, id: "comments_#{post.id}" do %>
         <% post.comments.top_level.each do |comment| %>
-            <%= render partial: "comments/comment", locals: { current_comment: comment } %>
+            <%= render partial: "comments/comment", locals: { current_comment: comment, user_comment_likes: user_comment_likes } %>
         <% end %>
     <% end %>
 

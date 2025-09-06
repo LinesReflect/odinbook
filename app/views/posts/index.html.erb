@@ -4,10 +4,10 @@
     <div class="new-post-wrapper" style="align-self: center;">
         <%= turbo_frame_tag "new-post", src: new_post_path %>
     </div>
-    <% if current_user.feed.present? %>
+    <% if @posts.present? %>
         <div id="posts">
-            <% current_user.feed.sort_by(&:created_at).reverse.each do |post| %>
-                <%= render partial: "post", locals: { post: post } %>
+            <% @posts.each do |post| %>
+                <%= render partial: "post", locals: { post: post, user_post_likes: @user_post_likes, user_comment_likes: @user_comment_likes  } %>
             <% end %>
         </div>
     <% else %>

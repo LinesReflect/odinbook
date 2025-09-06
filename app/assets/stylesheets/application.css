@@ -17,3 +17,13 @@ a:hover{
 :visited {
     color: black;
 }
+
+.like-button,
+.unlike-button {
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+    display: inline;
+    cursor: pointer;
+}  

@@ -1,0 +1,11 @@
+<h1 style="justify-self: center;">Posts Likes</h1>
+
+<p><%= @likes.count %> likes</p>
+
+<% @likes.each do |like| %>
+    <div class="like-wrapper" style="display: flex; align-items: center; gap: 10px; margin: 5px;">
+        <%= render inline: Rails.root.join("app/assets/images/liked_heart.svg").read %>
+        <%= image_tag like.user.avatar, size: like.user.avatar_thumbnail_size %>
+        <%= link_to like.user.username, user_path(like.user) %>
+    </div>
+<% end %>

@@ -1,0 +1,9 @@
+<%= turbo_stream.update "#{@like.likeable_type.downcase}-#{@like.likeable.id}-like-wrapper" do %>
+    <%= render partial: "likes/unlike_button", locals: {like: @like} %>
+
+    <% if @like.likeable_type == "Post" %>
+        <%= link_to "#{@like.likeable.likes.count} likes", post_likes_path(@like.likeable) %>
+    <% else %>
+        <%= link_to "#{@like.likeable.likes.count} likes", comment_likes_path(@like.likeable) %>
+    <% end %>
+<% end %>

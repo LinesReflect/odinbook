@@ -1,0 +1,3 @@
+<%= button_to likes_path(like: { likeable_type: likeable.class.name, likeable_id: likeable.id}), class: "like-button", data: {turbo_method: :post}, title: "Like"  do %>
+    <%= render inline: Rails.root.join("app/assets/images/unliked_heart.svg").read %>
+<% end %>

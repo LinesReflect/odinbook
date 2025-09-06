@@ -4,4 +4,6 @@ class Post < ApplicationRecord
   has_many :comments, dependent: :destroy
 
   validates :body, presence: true
+
+  scope :user_feed, ->(user) { where(poster: user.followings.pluck(:id) + [ user.id ]) }
 end

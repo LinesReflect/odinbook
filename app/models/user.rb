@@ -140,6 +140,12 @@ class User < ApplicationRecord
     self.likes.where(likeable_type: "Post")
   end
 
+  def likes_post?(post)
+    return true if self.liked_posts.include?(Like.find_by(likeable: post))
+
+    false
+  end
+
   def liked_comments
     self.likes.where(likeable_type: "Comment")
   end
@@ -156,6 +162,6 @@ class User < ApplicationRecord
   end
 
   def feed
-    (self.posts + self.followings_posts).flatten
+    Post.where(poster: :id)
   end
 end
