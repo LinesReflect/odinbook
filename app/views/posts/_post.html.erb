@@ -12,7 +12,7 @@
     
     <div style="display: flex; align-items: center; border-bottom: 1px solid black; gap: 5px;">
         <%= content_tag :div, id: "post-#{post.id}-like-wrapper", style: "display: flex; align-items: center; gap: 5px;" do %>
-            <% if user_post_likes[post.id] %>
+            <% if current_user.likes_this?(post) %>
                 <div>
                     <%= render partial: "likes/unlike_button", locals: {like: user_post_likes[post.id]} %>
                 </div>
@@ -24,7 +24,9 @@
             <%= link_to "#{post.likes.count} likes", post_likes_path(post) %>
         <% end %>
         <p>|</p>
-        <p><%= post.comments.count %> replies</p>
+        <%= content_tag :div, id: "post-#{post.id}-comment-count" do %>
+            <%= link_to "#{post.comments.count} Comments", post_path(post) %>
+        <% end %>
         <div>
             <%= turbo_frame_tag "post_#{post.id}_new_comment" do %>
                 <%= link_to "Comment", new_comment_path(post: post) %>
@@ -33,9 +35,14 @@
     </div>
 
     <%= content_tag :div, id: "comments_#{post.id}" do %>
-        <% post.comments.top_level.each do |comment| %>
+        <% post.comments.top_level.limit(3).each do |comment| %>
             <%= render partial: "comments/comment", locals: { current_comment: comment, user_comment_likes: user_comment_likes } %>
         <% end %>
     <% end %>
 
+    <% if post.comments.any? %>
+        <%= content_tag :div, id: "post-#{post.id}-all-comments" do %>
+            <%= link_to "Show All #{post.comments.count} Comments", post_path(post) %>
+        <% end %>
+    <% end %>
 </div>

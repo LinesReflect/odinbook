@@ -140,8 +140,8 @@ class User < ApplicationRecord
     self.likes.where(likeable_type: "Post")
   end
 
-  def likes_post?(post)
-    return true if self.liked_posts.include?(Like.find_by(likeable: post))
+  def likes_this?(likeable)
+    return true if self.likes.find_by(likeable: likeable)
 
     false
   end

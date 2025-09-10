@@ -1,4 +1,11 @@
 class CommentsController < ApplicationController
+  def index
+    @top_level_comments = Comment.where(post: params[:post_id], parent: nil).includes(:id, :user).order(likes_count: :desc).page()
+
+    @top_level_comment_ids = @top_level_comments.map(&:id)
+
+    @comment_replies = Comment.where(post: params[:post_id]).where.not(id: @top_level_comment_ids).includes(:user).order(likes_count: :desc)
+  end
   def new
     @comment = Comment.new
   end

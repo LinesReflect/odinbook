@@ -6,6 +6,14 @@ header {
     background-color: lightgray;
 }
 
+footer {
+    width: 100%;
+    background-color: lightgray;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 a {
     color: black;
 }
@@ -26,4 +34,16 @@ a:hover{
     margin: 0;
     display: inline;
     cursor: pointer;
-}  
+}
+
+.load-more-link {
+    background-color: lightgray;
+    display: block;
+    width: 100%;
+    text-align: center;
+
+}
+
+.load-more-link:hover {
+    background-color: white;
+}

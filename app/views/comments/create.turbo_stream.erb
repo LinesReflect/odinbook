@@ -12,4 +12,15 @@
             <%= link_to "Reply to #{Comment.find(@comment.parent_id).user.username}", new_comment_path(post: @comment.post, parent_id: @comment.parent_id) %>
         <% end %>
     <% end %>
+    <%= content_tag :div, id: "comment-#{@comment.id}-reply-count" do %>
+        <%= link_to "#{@comment.replies_count} Comments", post_path(@comment.post) %>
+    <% end %>
+<% end %>
+
+<%= turbo_stream.update "post-#{@comment.post.id}-comment-count" do %>
+    <%= link_to "#{@comment.post.comments.count} Comments", post_path(@comment.post) %>
+<% end %>
+
+<%= turbo_stream.update "post-#{@comment.post.id}-all-comments" do %>
+    <%= link_to "Show All #{@comment.post.comments.count} Comments", post_path(@comment.post) %>
 <% end %>

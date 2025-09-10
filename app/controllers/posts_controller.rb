@@ -1,6 +1,6 @@
 class PostsController < ApplicationController
   def index
-    @posts = Post.user_feed(current_user).includes(:poster).order(created_at: :desc).limit(10)
+    @posts = Post.user_feed(current_user).includes(:poster).order(created_at: :desc).page(params[:page]).per(10)
 
     post_ids = @posts.map(&:id)
 
@@ -9,6 +9,11 @@ class PostsController < ApplicationController
     @user_post_likes = current_user.likes.where(likeable_type: "Post", likeable_id: post_ids).index_by(&:likeable_id)
 
     @user_comment_likes = current_user.likes.where(likeable_type: "Comment", likeable_id: @comments.pluck(:id)).index_by(&:likeable_id)
+
+    respond_to do |format|
+      format.turbo_stream
+      format.html
+    end
   end
 
   def new
