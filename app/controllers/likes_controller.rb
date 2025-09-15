@@ -15,7 +15,7 @@ class LikesController < ApplicationController
 
     respond_to do |format|
       if @like.save
-        @likeable.is_a?(Post) ? Post.increment_counter(@likeable.id, :likes) : Comment.increment_counter(@likeable.id, :likes)
+        @likeable.is_a?(Post) ? Post.increment_counter(:likes_count, @likeable.id) : Comment.increment_counter(:likes_count, @likeable.id)
         format.turbo_stream
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -28,7 +28,7 @@ class LikesController < ApplicationController
 
     respond_to do |format|
       if @like.delete
-        @likeable.is_a?(Post) ? Post.decrement_counter(@likeable.id, :likes) : Comment.decrement_counter(@likeable.id, :likes)
+        @like.likeable.is_a?(Post) ? Post.decrement_counter(:likes_count, @like.likeable.id) : Comment.decrement_counter(:likes_count, @like.likeable.id)
         format.turbo_stream
       else
         format.html { render :destroy, status: :unprocessable_entity }

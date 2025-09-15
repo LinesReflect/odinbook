@@ -5,6 +5,7 @@
             <%= form.hidden_field :post_id, value: params[:post] %>
             <%= form.hidden_field :user_id, value: current_user.id %>
             <%= form.hidden_field :parent_id, value: params[:parent_id] %>
+            <%= form.hidden_field :context, value: params[:context] %>
             <%= form.submit "Reply" %>
         </div>
     <% end %>

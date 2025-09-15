@@ -1,0 +1,3 @@
+<h1>Post by <%= @post.poster.username%></h1>
+
+<%= render partial: "full_post", locals: { post: @post, user_comment_likes: @user_comment_likes} %>

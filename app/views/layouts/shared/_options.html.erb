@@ -1,0 +1,12 @@
+<div>
+    <div data-action="click->options#clicked" class="options-toggle toggle-button">
+        <%=  render inline: Rails.root.join("app/assets/images/options-outline.svg").read %>
+    </div>
+    <div data-options-target="list" style="visibility: hidden; background-color: white; position: absolute; width: 75px; height: fit-content; border: 1px solid black;">
+        <% if object.is_a?(Post) %>
+            <%= button_to "Delete", post_path(object), method: :delete, class: "options-delete-button" %>
+        <% else %>
+            <%= button_to "Delete", comment_path(object), method: :delete, class: "options-delete-button" %>
+        <% end %>
+    </div>
+</div>

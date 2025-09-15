@@ -2,7 +2,7 @@
     <h1 class="index-title" style="display: flex; justify-content: center;">Your Feed</h1>
     
     <div class="new-post-wrapper" style="align-self: center;">
-        <%= turbo_frame_tag "new-post", src: new_post_path %>
+        <%= turbo_frame_tag "new-post", src: new_post_path(context: :index) %>
     </div>
     <% if @posts.present? %>
         <div id="posts">

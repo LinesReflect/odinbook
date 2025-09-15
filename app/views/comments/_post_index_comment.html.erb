@@ -1,0 +1,56 @@
+<%= content_tag :div, id: "comment-#{current_comment.id}-wrapper", class: "comment-wrapper", data: { controller: "resize" } do %>
+    <div class="comment-header" style="display: flex; justify-content: space-between;">
+        <div>
+            <%= link_to user_path(current_comment.user) do %>
+                <div style="display: flex; align-content: align-items: center; gap: 5px;">
+                    <%= image_tag current_comment.user.avatar, size: current_comment.user.avatar_thumbnail_size %>
+                    <%= current_comment.user.username %>
+                </div>
+            <% end %>
+        </div>
+        <div style="display: flex;">
+            <% if current_comment.user == current_user %>
+                <div data-controller="options">
+                    <%= render partial: "layouts/shared/options", locals: {object: current_comment} %>
+                </div>
+            <% end %>
+            <div data-resize-target="min" data-action="click->resize#size" class="toggle-button">
+                <%= render partial: "layouts/shared/minimize" %>
+            </div>
+            <div data-resize-target="max" data-action="click->resize#size" class="toggle-button" style="display: none;">
+                <%= render partial: "layouts/shared/maximize" %>
+            </div>
+        </div>
+    </div>
+    <div class="comment-body" data-resize-target="comment">
+        <p><%= current_comment.body %></p>
+        <p><%= current_comment.created_at.strftime("%B %d, %Y %I:%M:%S%p") %></p>
+        <div style="display: flex; align-items: center; gap: 5px;">
+            <%= content_tag :div, id: "comment-#{current_comment.id}-like-wrapper", style: "display: flex; align-items: center; gap: 5px;" do %>
+                <% if current_user.likes_this?(current_comment) %>
+                    <%= render partial: "likes/unlike_button", locals: { like: user_comment_likes[current_comment.id] } %>
+                <% else %>
+                    <%= render partial: "likes/like_button", locals: { likeable: current_comment } %>
+                <% end %>
+                <%= link_to "#{current_comment.likes.count} likes", comment_likes_path(current_comment) %>
+            <% end %>
+            <p>|</p>
+            <%= content_tag :div, id: "comment-#{current_comment.id}-reply-count" do %>
+                <%= link_to "#{current_comment.replies_count} Replies", post_path(current_comment.post) %>
+            <% end %>
+        </div>
+        
+        <%= turbo_frame_tag "comment_#{current_comment.id}_new_reply" do %>
+            <%= link_to "Reply to #{current_comment.user.username}", new_comment_path(post: current_comment.post, parent_id: current_comment.id) %>
+        <% end %>
+        <% if current_comment.top_level? %>
+            <ul style="gap: 5px">
+                <%= content_tag :div, id: "replies_#{current_comment.id}" do %>
+                    <% current_comment.replies.limit(3).each do |reply| %>
+                        <li><%= render partial: "comments/post_index_comment", locals: { current_comment: reply, user_comment_likes: user_comment_likes } %></li>
+                    <% end %>
+                <% end %>
+            </ul>
+        <% end %>
+    </div>
+<% end %>

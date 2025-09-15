@@ -29,6 +29,16 @@ class CommentsController < ApplicationController
     end
   end
 
+  def destroy
+    @comment = Comment.find(params[:id])
+
+    respond_to do |format|
+      if @comment.delete
+        format.turbo_stream
+      end
+    end
+  end
+
   private
 
   def comment_params

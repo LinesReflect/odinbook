@@ -1,4 +1,4 @@
-<%= content_tag :div, id: "post-#{post.id}-wrapper", class: "post-wrapper-index" do %>
+<%= content_tag :div, id: "post-#{post.id}-wrapper", class: "post-wrapper-show" do %>
     <div>
         <div class="user-info-options-wrapper" style="display: flex; align-items: flex-start; justify-content: space-between;">
             <div class="user-info">
@@ -10,11 +10,6 @@
                 <% end %>
             </div>
             <div style="display: flex; gap: 5px;">
-                <div class="toggle-button">
-                    <%= link_to post_path(post) do %>
-                        <%= render partial: "posts/to_post" %>
-                    <% end %>
-                </div>
                 <% if post.poster == current_user %>
                     <div data-controller="options">
                         <%= render partial: "layouts/shared/options", locals: {object: post} %>
@@ -32,7 +27,7 @@
         <%= content_tag :div, id: "post-#{post.id}-like-wrapper", style: "display: flex; align-items: center; gap: 5px;" do %>
             <% if current_user.likes_this?(post) %>
                 <div>
-                    <%= render partial: "likes/unlike_button", locals: {like: user_post_likes[post.id]} %>
+                    <%= render partial: "likes/unlike_button", locals: {like: post} %>
                 </div>
             <% else %>
                 <div>
@@ -47,20 +42,14 @@
         <% end %>
         <div>
             <%= turbo_frame_tag "post_#{post.id}_new_comment" do %>
-                <%= link_to "Comment", new_comment_path(post: post, context: "index") %>
+                <%= link_to "Comment", new_comment_path(post: post, context: "show") %>
             <% end %>
         </div>
     </div>
 
     <%= content_tag :div, id: "comments_#{post.id}" do %>
-        <% post.comments.top_level.limit(3).each do |comment| %>
-            <%= render partial: "comments/post_index_comment", locals: { current_comment: comment, user_comment_likes: user_comment_likes } %>
-        <% end %>
-    <% end %>
-
-    <% if post.comments.count > 3 %>
-        <%= content_tag :div, id: "post-#{post.id}-all-comments" do %>
-            <%= link_to "Show All #{post.comments.count} Comments", post_path(post) %>
+        <% post.comments.top_level.each do |comment| %>
+            <%= render partial: "comments/post_show_comment", locals: { current_comment: comment, user_comment_likes: user_comment_likes } %>
         <% end %>
     <% end %>
 <% end %>

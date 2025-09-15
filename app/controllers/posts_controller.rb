@@ -18,16 +18,35 @@ class PostsController < ApplicationController
 
   def new
     @post = Post.new
+
+    @context = params[:context]
   end
 
   def create
     @post = Post.new(post_params)
+    @context = params[:context]
 
     respond_to do |format|
       if @post.save
         format.turbo_stream
       else
         format.html { render :new, status: :unprocessable_entity }
+      end
+    end
+  end
+
+  def show
+    @post = Post.find(params[:id])
+
+    @user_comment_likes = current_user.likes.where(likeable_type: "Comment", likeable_id: @post.comments.pluck(:id)).index_by(&:likeable_id)
+  end
+
+  def destroy
+    @post = Post.find(params[:id])
+
+    respond_to do |format|
+      if @post.delete
+        format.turbo_stream
       end
     end
   end

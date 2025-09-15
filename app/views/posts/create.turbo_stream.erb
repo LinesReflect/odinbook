@@ -1,7 +1,18 @@
-<%= turbo_stream.prepend "posts", @post %>
+<% if @context == "index" %>
+    <%= turbo_stream.prepend "posts", @post %>
+<% else %>
+    <%= turbo_stream.prepend "posts" do %>
+        <%= render partial: "post_only", locals: { post: @post } %>
+    <% end %>
+<% end %>
+
 
 <%= turbo_stream.update "new-post" do %>
-    <%= turbo_frame_tag "new-post", src: new_post_path %>
+    <% if @context == "index" %>
+        <%= turbo_frame_tag "new-post", src: new_post_path(context: :index) %>
+    <% else %>
+                <%= turbo_frame_tag "new-post", src: new_post_path %>
+    <% end %>
 <% end %>
 
 

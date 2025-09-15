@@ -2,10 +2,6 @@ html {
     background-color: lightslategray;
 }
 
-header {
-    background-color: lightgray;
-}
-
 footer {
     width: 100%;
     background-color: lightgray;
@@ -46,4 +42,54 @@ a:hover{
 
 .load-more-link:hover {
     background-color: white;
+}
+
+.toggle-button {
+    box-shadow: 0 0 0 inset transparent;
+}
+
+.toggle-button:hover {
+    background-color: rgb(119, 136, 153, .5);
+    box-shadow: 0 0 5px black inset;
+    cursor: pointer;
+}
+
+.toggle-button:active {
+    background-color: lightslategray;
+}
+
+.post-wrapper-index {
+    display: flex;
+    flex-direction: column;
+    width: fit-content;
+    border-left: 4px solid black;
+    border-bottom: 4px solid black;
+    background-color: lightgrey;
+    padding: 5px;
+    margin: 5px;
+    gap: 10px;
+}
+
+.post-wrapper-show {
+    justify-self: center;
+    width: 75%;
+    display: flex;
+    flex-direction: column;
+    border-left: 4px solid black;
+    border-bottom: 4px solid black;
+    background-color: lightgrey;
+    padding: 5px;
+    margin: 5px;
+    gap: 10px;
+}
+
+.options-delete-button { 
+    width: 100%;
+}
+
+.comment-wrapper {
+    margin: 10px;
+    border-left: 1px solid black;
+    border-bottom: 1px solid black;
+    padding: 5px;
 }
