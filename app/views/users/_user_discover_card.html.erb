@@ -1,0 +1,15 @@
+<div class="user-discover-card">
+    <%= link_to user_path(user) do %>
+        <div class="user-discover-info">
+            <%= image_tag user.avatar, size: user.avatar_profile_size %>
+            <%= user.username %>
+        </div>
+    <% end %>
+    <% if current_user.follows?(user) %>
+        <p style="color: green;">- Following ✓ </p>
+        <%= button_to "Unfollow", follow_path(Follow.find_by(followed: user, follower: current_user).id), method: :delete, data: {turbo: true} %>
+    <% else %>
+        <p style="color: rosybrown;">- Not Following</p>
+        <div><%= render partial: "follows/shared/follow_form", locals: {current_user: current_user, other_user: user}%></div>
+    <% end %>
+</div>

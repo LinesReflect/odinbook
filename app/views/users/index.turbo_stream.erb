@@ -1,0 +1,9 @@
+<%= turbo_stream.replace "users" do %>
+    <div id="users" style="display: grid; grid-template-columns: repeat(4, 1fr); align-items: center; grid-gap: 1px;">
+        <% @users.each do |user| %>
+            <% next if current_user == user %>
+            <%= render partial: "user_discover_card", locals: { user: user } %>
+        <% end %>
+    </div>
+<% end %>
+

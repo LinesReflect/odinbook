@@ -1,3 +1,9 @@
+/*
+ *= require pagy
+ */
+
+
+
 html {
     background-color: lightslategray;
 }
@@ -32,15 +38,19 @@ a:hover{
     cursor: pointer;
 }
 
-.load-more-link {
+.pagination {
+    margin-top: 5px;
+    padding: 2px;
     background-color: lightgray;
-    display: block;
+    display: flex;
     width: 100%;
     text-align: center;
+    justify-content: center;
+    align-items: center;
 
 }
 
-.load-more-link:hover {
+.pagination:hover {
     background-color: white;
 }
 
@@ -93,3 +103,26 @@ a:hover{
     border-bottom: 1px solid black;
     padding: 5px;
 }
+
+.user-discover-card {
+    background-color: lightgray;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    padding: 5px;
+}
+
+.user-discover-info {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+}
+
+.user-discover-card:has(.user-discover-info:nth-of-type(1):hover) {
+    /*you may replace this with an explicit className, e.g. :has(.child1)*/
+    background: white;
+}
+
+

@@ -1,6 +1,6 @@
 class PostsController < ApplicationController
   def index
-    @posts = Post.user_feed(current_user).includes(:poster).order(created_at: :desc).page(params[:page]).per(10)
+    @pagy, @posts = pagy(Post.user_feed(current_user).includes(:poster).order(created_at: :desc), limit: 10)
 
     post_ids = @posts.map(&:id)
 

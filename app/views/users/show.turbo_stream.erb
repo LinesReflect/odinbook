@@ -1,0 +1,11 @@
+<%= turbo_stream.append "posts" do %>
+    <% @posts.each do |post| %>
+        <%= render partial: "posts/post_only", locals: { post: post, user_post_likes: @user_post_likes, user_comment_likes: @user_comment_likes } %>
+    <% end %>
+<% end %>
+
+<%= turbo_stream.update "user-posts-pagination" do %>
+    <% if @pagy.next %>
+        <%= link_to "⇓ Load More Posts ⇓", user_path(page: @pagy.next, format: :turbo_stream), data: { turbo_stream: true, turbo_prefetch: false }, class: "pagination" %>
+    <% end %>
+<% end %>

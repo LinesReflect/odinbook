@@ -14,8 +14,12 @@
 <div class="followed-users-wrapper" style="justify-self: center; display: grid; grid-template-columns: repeat(4, 1fr); justify-content: center; gap: 1px">
     <% @followings.each do |following| %>
         <div class="following-wrapper" style="background-color: lightgrey; display: flex; align-items: center; gap: 5px; padding: 5px;">
-            <%= image_tag following.avatar, size: following.avatar_profile_size %>
-            <%= link_to following.username, user_path(following) %>
+            <%= link_to user_path(following) do %>
+                <div style="display: flex; align-items: center; gap: 5px;">
+                    <%= image_tag following.avatar, size: following.avatar_profile_size %>
+                    <%= following.username %>
+                </div>
+            <% end %>
             <% if following == current_user %>
                 <p style="color: brown;">- You</p>
             <% elsif  current_user.follows?(following) %>

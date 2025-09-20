@@ -1,17 +1,11 @@
 <h1 class="user-index-title" style="text-align: center;">OdinBook Members</h1>
-<div class="users-follow_wrapper" style="display: grid; grid-template-columns: repeat(4, 1fr); align-items: center; grid-gap: 1px;">
+
+<div id="users" style="display: grid; grid-template-columns: repeat(4, 1fr); align-items: center; grid-gap: 1px;">
     <% @users.each do |user| %>
-        <% next if current_user == user %>
-        <div class="users-follow-square" style="background-color: lightgray; display: flex; align-items: center; justify-content: center; gap: 5px; padding: 5px;">
-            <%= image_tag user.avatar, size: user.avatar_profile_size %>
-            <%= link_to user.username, user_path(user) %>
-            <% if current_user.follows?(user) %>
-                <p style="color: green;">- Following ✓ </p>
-                <%= button_to "Unfollow", follow_path(Follow.find_by(followed: user, follower: current_user).id), method: :delete, data: {turbo: true} %>
-            <% else %>
-                <p style="color: rosybrown;">- Not Following</p>
-                <div><%= render partial: "follows/shared/follow_form", locals: {current_user: current_user, other_user: user}%></div>
-            <% end %>
-        </div>
+        <%= render partial: "user_discover_card", locals: { user: user } %>
     <% end %>
+</div>
+
+<div id="users-pagination" class="pagination">
+    <%== pagy_nav(@pagy) if @pagy.pages > 1 %>
 </div>

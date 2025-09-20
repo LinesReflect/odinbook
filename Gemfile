@@ -51,7 +51,9 @@ gem "down", "~> 5.0"
 
 gem "rest-client"
 
-gem "kaminari"
+gem "pagy"
+
+gem "order_as_specified"
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem

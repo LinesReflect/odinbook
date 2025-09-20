@@ -40,3 +40,7 @@
         </div>
     </div>
 </div>
+
+<div id="user-posts-pagination">
+    <%= link_to "⇓ Load More Posts ⇓", user_path(page: @pagy.next, format: :turbo_stream), data: { turbo_stream: true, turbo_prefetch: false }, class: "pagination" %>
+</div>

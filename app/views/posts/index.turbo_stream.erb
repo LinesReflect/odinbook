@@ -1,5 +1,7 @@
 <%= turbo_stream.update "posts-pagination" do %>
-    <%= link_to_next_page @posts, "Load More Posts", params: { format: :turbo_stream }, class: "load-more-link" %>
+    <% if @pagy.next %>
+        <%= link_to "⇓ Load More Posts ⇓", posts_path(page: @pagy.next, format: :turbo_stream), data: { turbo_stream: true, turbo_prefetch: false }, class: "pagination" %>
+    <% end %>
 <% end %>
 
 <%= turbo_stream.append "posts" do %>

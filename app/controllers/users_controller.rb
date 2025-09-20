@@ -1,6 +1,10 @@
 class UsersController < ApplicationController
   def index
-    @users = User.all
+    ids = Rails.cache.fetch("random_ids", expires_in: 1.hour) do
+      User.where.not(id: current_user.id).limit(100).pluck(:id).shuffle
+    end
+
+    @pagy, @users = pagy(User.where(id: ids).order_as_specified(id: ids), limit: 28)
 
     @follow = Follow.new
   end
@@ -9,13 +13,18 @@ class UsersController < ApplicationController
 
     @follow = Follow.new
 
-    @posts = @user.posts.order(created_at: :desc)
+    @pagy, @posts = pagy(@user.posts.order(created_at: :desc), limit: 10)
 
     @user_post_likes = current_user.likes.where(likeable: @user.posts).index_by(&:likeable_id)
 
     @comments = Comment.where(post_id: @user.posts.pluck(:id)).includes(:user)
 
     @user_comment_likes = current_user.likes.where(likeable: @comments).index_by(&:likeable_id)
+
+    respond_to do |format|
+      format.turbo_stream
+      format.html
+    end
   end
 
   def update
