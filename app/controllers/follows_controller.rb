@@ -1,27 +1,29 @@
 class FollowsController < ApplicationController
-  def new(user1, user2)
+  def new
     @follow = Follow.new
   end
 
   def create
-    @follower_user = User.find(follow_params[:follower])
+    @follow = Follow.new(follow_params)
+    @follow_request = FollowRequest.find(params[:follow][:follow_request])
 
-    if @follower_user.follow(User.find(follow_params[:followed]))
-      redirect_back_or_to root_path
-    else
-      redirect_back_or_to root_path
+    respond_to do |format|
+      if @follow.save
+        @follow_request.destroy
+        format.turbo_stream
+        format.html { redirect_to user_path(@follow.follower) }
+      end
     end
   end
 
   def destroy
     @follow = Follow.find(params[:id])
     @follow.delete
-    redirect_back_or_to root_path
   end
 
   private
 
   def follow_params
-    params.expect(follow: [ :followed, :follower ])
+    params.expect(follow: [ :followed_id, :follower_id ])
   end
 end

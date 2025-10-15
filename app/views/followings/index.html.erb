@@ -1,35 +1,28 @@
 <% if @user == current_user %>
-    <h2> <%= link_to "Back to your profile", user_path(@user) %> </h2>
+    <h2> <%= link_to "< Back to your profile", user_path(@user) %> </h2>
 <% else %>
-    <h2><%= link_to "Back to #{@user.username} profile", user_path(@user) %></h2>
+    <h2><%= link_to "< Back to #{@user.username} profile", user_path(@user) %></h2>
 <% end %>
 
-<% if @user == current_user %>
-    <h1 class="followed-index-title" style="text-align: center;">Your Followed Users</h1>
-<% else %>
-    <h1 class="followed-index-title" style="text-align: center;"><%= @user.username%> Followed Users</h1>
-<% end %>
+<div style="display: flex; gap: 5px; justify-content: center;">
+    <% if @user == current_user %>
+        <h1 class="following-index-title" style="text-align: center;">You Follow</h1>
+    <% else %>
+        <h1 class="following-index-title" style="text-align: center;"><%= @user.username%> Follows</h1>
+    <% end %>
+    
+    <h2>(<%= @user.followings.count %>)</h2>
+</div>
 
 
-<div class="followed-users-wrapper" style="justify-self: center; display: grid; grid-template-columns: repeat(4, 1fr); justify-content: center; gap: 1px">
+<div class="users-display">
     <% @followings.each do |following| %>
-        <div class="following-wrapper" style="background-color: lightgrey; display: flex; align-items: center; gap: 5px; padding: 5px;">
-            <%= link_to user_path(following) do %>
-                <div style="display: flex; align-items: center; gap: 5px;">
-                    <%= image_tag following.avatar, size: following.avatar_profile_size %>
-                    <%= following.username %>
-                </div>
-            <% end %>
-            <% if following == current_user %>
-                <p style="color: brown;">- You</p>
-            <% elsif  current_user.follows?(following) %>
-                <p style="color: green;">- Following ✓</p>
-            <% else %>
-                <p style="color: rosybrown;">- Not Following</p>
-            <% end %>
-            <% if @user == current_user %>
-                <%= button_to "Unfollow", follow_path(Follow.find_by(followed: following, follower: current_user).id), method: :delete, data: {turbo: true} %>
-            <% end %>
-        </div>
+        <%= render partial: "users/user_discover_card", locals: { user: following } %>
     <% end %>
 </div>
+
+<% if @pagy.pages > 1 %>
+    <div id="users-pagination" class="pagination">
+        <%== pagy_nav(@pagy) %>
+    </div>
+<% end %>

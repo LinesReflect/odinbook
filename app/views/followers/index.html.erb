@@ -1,27 +1,28 @@
 <% if @user == current_user %>
-    <h2> <%= link_to "Back to your profile", user_path(@user) %> </h2>
+    <h2> <%= link_to "< Back to your profile", user_path(@user) %> </h2>
 <% else %>
-    <h2><%= link_to "Back to #{@user.username} profile", user_path(@user) %></h2>
+    <h2><%= link_to "< Back to #{@user.username} profile", user_path(@user) %></h2>
 <% end %>
 
-<% if @user == current_user %>
-    <h1 class="followed-index-title" style="text-align: center;">Your Followers</h1>
-<% else %>
-    <h1 class="followed-index-title" style="text-align: center;"><%= @user.username%> Followers</h1>
-<% end %>
+<div style="display: flex; gap: 5px; justify-content: center;">
+    <% if @user == current_user %>
+        <h1 class="followed-index-title" style="text-align: center;">Your Followers</h1>
+    <% else %>
+        <h1 class="followed-index-title" style="text-align: center;"><%= @user.username%> Followers</h1>
+    <% end %>
+    
+    <h2>(<%= @user.followers.count %>)</h2>
+</div>
 
-<div class="follower-users-wrapper" style="justify-self: center; display: grid; grid-template-columns: repeat(4, 1fr); justify-content: center; gap: 1px">
+
+<div class="users-display">
     <% @followers.each do |follower| %>
-        <div class="follower-wrapper" style="background-color: lightgrey; display: flex; align-items: center; gap: 5px; padding: 5px;">
-            <%= image_tag follower.avatar, size: follower.avatar_profile_size %>
-            <%= link_to follower.username, user_path(follower) %>
-            <% if @user == current_user && @user.follows?(follower) %>
-                <p style="color: green;">- Following ✓</p>
-            <% elsif follower == current_user %>
-                <p style="color: brown;">- You</p>
-            <% else %>
-                <p style="color: rosybrown;">- Not Following</p>
-            <% end %>
-        </div>
+        <%= render partial: "users/user_discover_card", locals: { user: follower } %>
     <% end %>
 </div>
+
+<% if @pagy.pages > 1 %>
+    <div id="users-pagination" class="pagination">
+        <%== pagy_nav(@pagy) %>
+    </div>
+<% end %>

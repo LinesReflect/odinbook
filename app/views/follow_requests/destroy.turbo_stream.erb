@@ -1,0 +1,19 @@
+<%= turbo_stream.update "user-#{@follow_request.requester.id}-show-follow-request" do %>
+    <% unless @approved %>
+        <p>You have denied <%= @follow_request.requester.username %>'s follow request.</p>
+    <% end %>
+<% end %>
+
+<% if current_user == @follow_request.requester && @follow_requests_page %>
+    <%= turbo_stream.remove "user_#{@follow_request.requested.id}_card" %>
+<% elsif @follow_requests_page %>
+    <%= turbo_stream.remove "user_#{@follow_request.requester.id}_card" %>
+<% else %>
+    <%= turbo_stream.replace "user_#{@follow_request.requested.id}_card" do %>
+        <%= render partial: "users/user_discover_card", locals: { user: @follow_request.requested } %>
+    <% end %>
+<% end %>
+
+<%= turbo_stream.replace "follow-status" do %>
+    <%= render partial: "follow_requests/follow_request_form", locals: { requested: @follow_request.requested } %>
+<% end %>

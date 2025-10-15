@@ -4,12 +4,19 @@ class UsersController < ApplicationController
       User.where.not(id: current_user.id).limit(100).pluck(:id).shuffle
     end
 
-    @pagy, @users = pagy(User.where(id: ids).order_as_specified(id: ids), limit: 28)
+    @pagy, @users = pagy(User.where(id: ids).with_attached_avatar.order_as_specified(id: ids), limit: 28)
 
-    @follow = Follow.new
+    @sent_follow_requests = FollowRequest.where(requested: ids, requester: current_user).includes(:requested).index_by(&:requested)
+
+    @follow_request = FollowRequest.new
   end
   def show
     @user = User.find(params[:id])
+
+    @follow_request_from_current_user = FollowRequest.find_by(requested: @user, requester: current_user)
+    @follow_request_to_current_user = FollowRequest.find_by(requested: current_user, requester: @user)
+
+    @follow_request = FollowRequest.new
 
     @follow = Follow.new
 

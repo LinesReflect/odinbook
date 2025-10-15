@@ -1,11 +1,13 @@
 <h1 class="user-index-title" style="text-align: center;">OdinBook Members</h1>
 
-<div id="users" style="display: grid; grid-template-columns: repeat(4, 1fr); align-items: center; grid-gap: 1px;">
+<div id="users" class="users-display">
     <% @users.each do |user| %>
         <%= render partial: "user_discover_card", locals: { user: user } %>
     <% end %>
 </div>
 
-<div id="users-pagination" class="pagination">
-    <%== pagy_nav(@pagy) if @pagy.pages > 1 %>
-</div>
+<% if @pagy.pages > 1 %>
+    <div id="users-pagination" class="pagination">
+        <%== pagy_nav(@pagy) %>
+    </div>
+<% end %>

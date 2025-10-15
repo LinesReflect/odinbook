@@ -1,15 +1,67 @@
-<div class="user-discover-card">
-    <%= link_to user_path(user) do %>
-        <div class="user-discover-info">
-            <%= image_tag user.avatar, size: user.avatar_profile_size %>
-            <%= user.username %>
+<%= content_tag :div, id: "user_#{user.id}_card", class: "user-discover-card-wrapper" do %>
+    <div class="user-discover-card">
+        <div class="user-discover-card-picture">
+            <%= link_to user_path(user) do %>
+                <%= image_tag user.avatar, size: user.avatar_profile_size %>
+            <% end %>
         </div>
-    <% end %>
-    <% if current_user.follows?(user) %>
-        <p style="color: green;">- Following ✓ </p>
-        <%= button_to "Unfollow", follow_path(Follow.find_by(followed: user, follower: current_user).id), method: :delete, data: {turbo: true} %>
-    <% else %>
-        <p style="color: rosybrown;">- Not Following</p>
-        <div><%= render partial: "follows/shared/follow_form", locals: {current_user: current_user, other_user: user}%></div>
-    <% end %>
-</div>
+        <div class="user-discover-card-info">
+            <% if user_requests_to_follow(user) && local_assigns[:follow_requests_page] %>
+                <div class="user-discover-card-status">
+                    <%= link_to user.username, user_path(user), class: "username-link" %>
+                    <div style="display: flex; align-items: center; gap: 5px;">
+                        <p style="color: blue">(Follow Pending)</p>
+                        <% if local_assigns[:recieving] %>
+                            <%= render partial: "follows/shared/follow_form", locals: {follower: user, followed: current_user, follow_request: @recieved_follow_requests[user]}, class: "button" %>
+                            <%= button_to "Decline", user_follow_request_path(current_user, @recieved_follow_requests[user], follow_requests_page: local_assigns[:follow_requests_page]), method: :delete %>
+                        <% end %>
+                    </div>
+                </div>
+
+                <div class="user-discover-card-follow">
+                    <% if current_user.follows?(user) %>
+                       <p style="color: gray;">(Following)</p>
+                    <% elsif current_user_requests_to_follow(user) %>
+                        <p style="color: blue">(Follow Pending)</p>
+                        <% unless local_assigns[:recieving] %>
+                            <%= button_to "Unsend Request", user_follow_request_path(current_user, @sent_follow_requests[user], follow_requests_page: local_assigns[:follow_requests_page]), method: :delete %>
+                        <% end %>
+                    <% elsif current_user_not_following_not_requesting(user)%>
+                        <p style="color: gray;">(Not Following)</p>
+                    <% end %>
+                </div>
+            <% elsif current_user == user %>
+                <div class="user-discover-card-status">
+                    <%= link_to user.username, user_path(user), class: "username-link" %>
+                </div>
+                <div class="user-discover-card-follow">
+                    <p style="color: red;">(You)</p>
+                </div>
+            <% else %>
+                <div class="user-discover-card-status">
+                    <%= link_to user.username, user_path(user) %>
+                    <% if user.follows?(current_user) %>
+                       <p style="color: green;">Follows You ✓</p>
+                    <% elsif user_requests_to_follow(user) %>
+                        <p style="color: blue">(Follow Pending)</p>
+                    <% else %>
+                        <p style="color: rosybrown;">Not Following You</p>
+                    <% end %>
+                </div>
+
+                <div class="user-discover-card-follow">
+                    <% if current_user.follows?(user) %>
+                       <p style="color: gray;">(Following)</p>
+                       <%= button_to "Unfollow" %>
+                    <% elsif current_user_requests_to_follow(user) %>
+                        <p style="color: blue">(Follow Pending)</p>                            
+                        <%= button_to "Unsend Request", user_follow_request_path(current_user, @sent_follow_requests[user], follow_requests_page: local_assigns[:follow_requests_page]), method: :delete %>
+                    <% elsif current_user_not_following_not_requesting(user)%>
+                        <p style="color: gray;">(Not Following)</p>
+                        <%= render partial: "follow_requests/follow_request_form", locals: {requested: user}, class: "button" %>
+                    <% end %>
+                </div>
+            <% end %>
+        </div>
+    </div>
+<% end %>

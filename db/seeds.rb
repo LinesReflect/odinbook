@@ -8,14 +8,17 @@
 #     MovieGenre.find_or_create_by!(name: genre_name)
 #   end
 #
-count = 10
-100.times do
-  next if User.find_by(username: "Lines#{count}")
-  next if User.find_by(email: "Lines#{count}@test.com")
-  User.find_or_create_by!(username: "Lines#{count}", email: "Lines#{count}@test.com") do |user|
-    user.password = 'password'
-    user.password_confirmation = 'password'
-    user.avatar.attach(io: File.open("app/assets/images/blank-profile-picture-973460_1920.png"), filename: "blank-profile-picture-973460_1920.png", content_type: "avatar/png")
-  end
-  count += 1
+count = 950
+15.times do
+  r = FollowRequest.new(requester: User.where(id: [ 141..210 ]).sample, requested: User.find(4))
+  next if r.requester == User.find(4)
+  next if r.requester.follows?(r.requested)
+  r.save
 end
+
+
+# 100.times do
+# u = User.create(username: "lines#{count}", email: "lines#{count}@test.com", password: "Reflect")
+# u.avatar.attach(io: File.open("app/assets/images/blank-profile-picture-973460_1920.png"), filename: "blank-profile-picture-973460_1920.png", content_type: "avatar/png")
+# count+=1
+# end

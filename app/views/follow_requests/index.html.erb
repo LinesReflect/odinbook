@@ -1,0 +1,31 @@
+<h1>Follow Requests</h1>
+
+<div class="requests-wrapper">
+    <h2 class="follow-requests-title">Recieved Requests: <%= @recieved_follow_requests.count %></h2>
+    <div id="recieved-requests" class="users-display">
+        <% @sent_by_users.each do |user| %>
+            <%= render partial: "users/user_discover_card", locals: { user: user, follow_requests_page: true, recieving: true } %>
+        <% end %>
+    </div>
+
+    <% if @pagy_received.pages > 1 %>
+        <div id="recieved-requests-pagination" class="pagination">
+            <%== pagy_nav(@pagy_received) %>
+        </div>
+    <% end %>
+</div>
+
+<div class="requests-wrapper">
+    <h2 class="follow-requests-title">Sent Requests: <%= @sent_follow_requests.count %></h2>
+    <div id="sent-requests" class="users-display">
+        <% @sent_to_users.each do |user| %>
+            <%= render partial: "users/user_discover_card", locals: { user: user, follow_requests_page: true } %>
+        <% end %>
+    </div>
+
+    <% if @pagy_sent.pages > 1 %>
+        <div id="sent-requests-pagination" class="pagination">
+            <%== pagy_nav(@pagy_sent) %>
+        </div>
+    <% end %>
+</div>

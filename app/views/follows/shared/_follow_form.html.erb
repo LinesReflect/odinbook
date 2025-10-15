@@ -1,5 +1,6 @@
-<%= form_with model: @follow do |form| %>
-    <%= form.hidden_field :followed, value: other_user.id %>
-    <%= form.hidden_field :follower, value: current_user.id %>
-    <%= form.submit "Follow" %>
+<%= form_with model: @follow, local: true do |form| %>
+    <%= form.hidden_field :follow_request, value: follow_request.id %>
+    <%= form.hidden_field :followed_id, value: followed.id %>
+    <%= form.hidden_field :follower_id, value: follower.id %>
+    <%= form.submit "Accept" %>
 <% end %>

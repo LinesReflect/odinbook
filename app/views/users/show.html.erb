@@ -4,6 +4,16 @@
     <h1><%= @user.username %>'s Profile</h1>
 <% end %>
 
+<% if user_requests_to_follow(@user) %>
+    <%= content_tag :div, id: "user-#{@user.id}-show-follow-request", class: "user-show-follow-request-message" do %>
+        <p><%= @user.username %> has sent you a follow request!</p>
+        <div class="follow-request-response">
+            <%= render partial: "follows/shared/follow_form", locals: { follower: @user, followed: current_user, follow_request: @follow_request_to_current_user } %>
+            <%= button_to "Decline", user_follow_request_path(current_user, @follow_request_to_current_user), method: :delete %>
+        </div>
+    <% end %>
+<% end %>
+
 <% if @user.avatar.attached?%>
     <%= image_tag @user.avatar, size: @user.avatar_profile_size %>
 <% else %>
@@ -11,17 +21,33 @@
 <% end %>
 
 <div class="profile-follow-data" data-controller="follows">
-    <% if current_user == @user %>
-    <% elsif  current_user.follows?(@user) %>
-        <%= button_to "Unfollow", follow_path(Follow.find_by(followed: @user, follower: current_user).id), method: :delete, data: {turbo: true} %>
-    <% elsif !current_user.follows?(@user)%>
-        <div><%= render partial: "follows/shared/follow_form", locals: {current_user: current_user, other_user: @user}%></div>
-    <% end %>
+    <div id="follow-status">
+        <% if current_user == @user %>
+        <% elsif  current_user.follows?(@user) %>
+            <%= button_to "Unfollow", follow_path(Follow.find_by(followed: @user, follower: current_user).id), method: :delete, data: {turbo: true} %>
+        <% elsif current_user_requests_to_follow(@user) %>
+            <%= button_to "Unsend Request", user_follow_request_path(current_user, @follow_request_from_current_user), method: :delete %>
+        <% else%>
+            <%= render partial: "follow_requests/follow_request_form", locals: {requested: @user}%>
+        <% end %>
+    </div>
     <div class="follows-wrapper" style="display: flex; gap: 5px; align-items: center;">
         <%= link_to "Following: #{@user.followings.count}", user_followings_path(@user) %>
         <p> | </p>
         <%= link_to "Followers: #{@user.followers.count}", user_followers_path(@user) %>
     </div>
+    <% if current_user == @user %>
+        <div class="follow-requests-wrapper">
+            <%= link_to user_follow_requests_path(@user) do %>
+                <div style="display: flex; align-items: center; gap: 5px;">
+                    <p>Follow Requests</p>
+                    <% if current_user.received_follow_requests.count > 0 %>
+                        <p style="color: blue;">(<%= current_user.received_follow_requests.count %>)</p>
+                    <% end %>
+                </div>
+            <% end %>
+        </div>
+    <% end %>
 </div>
 
 <h2>Posts</h2>
@@ -41,6 +67,8 @@
     </div>
 </div>
 
-<div id="user-posts-pagination">
-    <%= link_to "⇓ Load More Posts ⇓", user_path(page: @pagy.next, format: :turbo_stream), data: { turbo_stream: true, turbo_prefetch: false }, class: "pagination" %>
-</div>
+<% if @pagy.next%>
+    <div id="user-posts-pagination">
+        <%= link_to "⇓ Load More Posts ⇓", user_path(page: @pagy.next, format: :turbo_stream), data: { turbo_stream: true, turbo_prefetch: false }, class: "pagination" %>
+    </div>
+<% end %>

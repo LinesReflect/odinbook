@@ -9,6 +9,7 @@ Rails.application.routes.draw do
   resources :users do
     resources :followings
     resources :followers
+    resources :follow_requests
   end
 
   post "/follows/new", to: "users#index"

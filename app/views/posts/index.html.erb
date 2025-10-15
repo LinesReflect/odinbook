@@ -10,9 +10,11 @@
                 <%= render partial: "post", locals: { post: post, user_post_likes: @user_post_likes, user_comment_likes: @user_comment_likes  } %>
             <% end %>
         </div>
-        <div id="posts-pagination">
-            <%= link_to "⇓ Load More Posts ⇓", posts_path(page: @pagy.next, format: :turbo_stream), data: { turbo_stream: true, turbo_prefetch: false }, class: "pagination" %>
-        </div>
+        <% if @pagy.next %>
+            <div id="posts-pagination">
+                <%= link_to "⇓ Load More Posts ⇓", posts_path(page: @pagy.next, format: :turbo_stream), data: { turbo_stream: true, turbo_prefetch: false }, class: "pagination" %>
+            </div>
+        <% end %>
     <% else %>
         <div>
             <p>No posts have been made by users you follow...</p>

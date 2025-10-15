@@ -104,25 +104,81 @@ a:hover{
     padding: 5px;
 }
 
-.user-discover-card {
+.user-discover-card-wrapper {
     background-color: lightgray;
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
     gap: 5px;
     padding: 5px;
 }
 
-.user-discover-info {
+.user-discover-card {
+    width: 100%;
+    height: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
     gap: 5px;
 }
 
-.user-discover-card:has(.user-discover-info:nth-of-type(1):hover) {
-    /*you may replace this with an explicit className, e.g. :has(.child1)*/
-    background: white;
+.user-discover-card-status {
+    display: flex;
+    flex-direction: column;
 }
 
+.user-discover-card-info {
+    width: 100%;
+    height: 100%;
+    justify-content: space-between;
+    display: flex;
+    gap: 5px;
+}
+
+.user-discover-card-follow {
+    align-self: flex-end;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+/* .user-discover-card-wrapper:has(.user-discover-card:nth-of-type(1):hover) {
+    background: white;
+} */
+
+.users-display {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    align-items: center;
+    grid-gap: 1px;
+}
+
+.follow-requests-title {
+    background-color: lightgray;
+}
+
+button:hover,
+.button:hover {
+    cursor: grab;
+}
+
+.user-show-follow-request-message { 
+    margin-bottom: 40px;
+    width: 100%;
+    background-color: lightgray;
+    display: flex;
+    gap: 5px;
+    justify-content: center;
+    align-items: center;
+    
+}
+
+.follow-request-response {
+    display: flex;
+    gap: 5px;
+}
+
+.user-discover-card-status > .username-link {
+    width: fit-content;
+}
 

@@ -1,0 +1,8 @@
+<%= turbo_stream.replace "user_#{@follow_request.requested.id}_card" do %>
+    <%= render partial: "users/user_discover_card", locals: { user: @follow_request.requested} %>
+<% end %>
+
+<%= turbo_stream.replace "follow-status" do %>
+    <%= button_to "Unsend Request", user_follow_request_path(current_user, @follow_request), method: :delete %>
+<% end %>
+ 

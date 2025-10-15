@@ -7,7 +7,7 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :validatable,
          :omniauthable, omniauth_providers: [ :google_oauth2, :twitter2 ]
 
-  # after_create :set_avatar
+  after_create :set_avatar
 
   validates :email, uniqueness: true
   validates :username, presence: true, uniqueness: true
@@ -114,6 +114,18 @@ class User < ApplicationRecord
     safely_destroy(request)
   end
 
+  def sent_follow_request_to?(other_user)
+    return true if sent_follow_requests.pluck(:requested_id).include?(other_user.id)
+
+    false
+  end
+
+  def received_follow_request_from?(other_user)
+    return true if received_follow_requests.pluck(:requester_id).include?(other_user.id)
+
+    false
+  end
+
   def accept_follow_request(other_user)
     return if self == other_user
 
@@ -164,5 +176,9 @@ class User < ApplicationRecord
 
   def feed
     Post.where(poster: :id)
+  end
+
+  def follow_requests
+    received_follow_requests + sent_follow_requests
   end
 end

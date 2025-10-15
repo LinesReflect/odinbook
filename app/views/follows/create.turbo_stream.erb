@@ -1,0 +1,6 @@
+<%= turbo_stream.update "user-#{@follow_request.requester.id}-show-follow-request" do %>
+    <p>You have accepted <%= @follow_request.requester.username %>'s follow request!</p>
+<% end %>
+
+<%= turbo_stream.remove "user_#{@follow.follower.id}_card" %>
+

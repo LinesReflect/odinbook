@@ -1,0 +1,5 @@
+<%= form_with(model: [current_user, @follow_request]) do |form| %>
+    <%= form.hidden_field :requester_id, value: current_user.id %>
+    <%= form.hidden_field :requested_id, value: requested.id %>
+    <%= form.submit "Send Follow Request" %>
+<% end %>
