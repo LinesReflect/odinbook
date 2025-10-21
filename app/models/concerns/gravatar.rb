@@ -33,10 +33,11 @@ module Gravatar
   end
 
   def has_gravatar?
-    RestClient.get(image_src(image_404))
-
+    RestClient.get(image_src(image_params_404))
     true
-  rescue RestClient::NotFound => e
+
+  rescue RestClient::NotFound
+
     false
   end
 end
