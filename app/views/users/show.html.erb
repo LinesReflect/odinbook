@@ -14,11 +14,10 @@
     <% end %>
 <% end %>
 
-<% if @user.avatar.attached?%>
+<div style="display: flex; flex-direction: column;">
     <%= image_tag @user.avatar, size: @user.avatar_profile_size %>
-<% else %>
-    <%= image_tag @user.avatar, size: avatar_profile_size%>
-<% end %>
+    <h2><%= @user.username %></h2>
+</div>
 
 <div class="profile-follow-data" data-controller="follows">
     <div id="follow-status">

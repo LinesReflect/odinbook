@@ -7,7 +7,7 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :validatable,
          :omniauthable, omniauth_providers: [ :google_oauth2, :twitter2 ]
 
-  after_create :set_avatar
+  after_create :set_avatar, :send_welcome_email
 
   validates :email, uniqueness: true
   validates :username, presence: true, uniqueness: true
@@ -180,5 +180,11 @@ class User < ApplicationRecord
 
   def follow_requests
     received_follow_requests + sent_follow_requests
+  end
+
+  private
+
+  def send_welcome_email
+    UserMailer.with(user: self).welcome_email.deliver_later
   end
 end
