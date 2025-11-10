@@ -79,9 +79,9 @@ test:
 # for a full overview on how database connection configuration can be specified.
 #
 production:
-  url: <%= ENV["DATABASE_URL"] %>
-  # primary: &primary_production
-  #   <<: *default
+  primary: &primary_production
+    <<: *default
+    url: <%= ENV["DATABASE_URL"] %>
   #   database: odinbook_production
   #   username: odinbook
   #   password: <%= ENV["ODINBOOK_DATABASE_PASSWORD"] %>
@@ -93,7 +93,7 @@ production:
   #   <<: *primary_production
   #   database: odinbook_production_queue
   #   migrations_paths: db/queue_migrate
-  # cable:
-  #   <<: *primary_production
+  cable:
+    <<: *primary_production
   #   database: odinbook_production_cable
   #   migrations_paths: db/cable_migrate
