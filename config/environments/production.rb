@@ -87,4 +87,12 @@ Rails.application.configure do
   #
   # Skip DNS rebinding protection for the default health check endpoint.
   # config.host_authorization = { exclude: ->(request) { request.path == "/up" } }
+
+  Rails.application.routes.default_url_options[:host] = "mysite-ce1j.onrender.com"
+  Rails.application.routes.default_url_options[:protocol] = "https"
+
+  config.action_controller.default_url_options = {
+    host: "mysite-ce1j.onrender.com",
+    protocol: "https"
+  }
 end
