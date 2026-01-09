@@ -7,7 +7,9 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :validatable,
          :omniauthable, omniauth_providers: [ :google_oauth2, :twitter2 ]
 
-  after_create :set_avatar, :send_welcome_email
+  after_commit :send_welcome_email, on: :create
+
+  after_create :set_avatar
 
   validates :email, uniqueness: true
   validates :username, presence: true, uniqueness: true
