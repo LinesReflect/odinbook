@@ -1,13 +1,17 @@
 <h1 class="user-index-title" style="text-align: center;">OdinBook Members</h1>
 
-<div id="users" class="users-display">
-    <% @users.each do |user| %>
-        <%= render partial: "user_discover_card", locals: { user: user } %>
-    <% end %>
-</div>
-
-<% if @pagy.pages > 1 %>
-    <div id="users-pagination" class="pagination">
-        <%== pagy_nav(@pagy) %>
+<% if @users.any? %>
+    <div id="users" class="users-display">
+        <% @users.each do |user| %>
+            <%= render partial: "user_discover_card", locals: { user: user } %>
+        <% end %>
     </div>
+    
+    <% if @pagy.pages > 1 %>
+        < id="users-pagination" class="pagination">
+            <%== pagy_nav(@pagy) %>
+        </div>
+    <% end %>
+<% else %>
+    <p>No users found."</p>
 <% end %>
